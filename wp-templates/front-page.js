@@ -1,6 +1,6 @@
 import * as MENUS from 'constants/menus';
 import { useQuery, gql } from '@apollo/client';
-import { FiArrowRight, FiMail } from 'react-icons/fi';
+import { FiArrowRight, FiMail, FiGithub, FiExternalLink } from 'react-icons/fi';
 import Link from 'next/link';
 import appConfig from 'app.config';
 import styles from 'styles/pages/_Home.module.scss';
@@ -17,6 +17,33 @@ import {
 import { BlogInfoFragment } from 'fragments/GeneralSettings';
 
 const postsPerPage = 3;
+
+const projects = [
+  {
+    name: 'ai-crypto-trader',
+    url: 'https://github.com/zd87pl/ai-crypto-trader',
+    language: 'Python',
+    description: 'An experimental cryptocurrency trading system that combines AI-powered analysis with real-time market data and social sentiment monitoring.',
+  },
+  {
+    name: 'private-ai-adapters',
+    url: 'https://github.com/zd87pl/private-ai-adapters',
+    language: 'Python',
+    description: 'Privacy-preserving AI personalization through encrypted DoRA/LoRA adapters. Cryptographic right-to-be-forgotten and consent-gated access.',
+  },
+  {
+    name: 'dna-analysis',
+    url: 'https://github.com/zd87pl/dna-analysis',
+    language: 'Shell',
+    description: 'Open-source genetic analysis toolkit. Analyze your WGS/VCF data locally and privately. 500+ variants across fitness, health, and traits.',
+  },
+  {
+    name: 'intent-sentiment-assistant',
+    url: 'https://github.com/zd87pl/intent-sentiment-assistant',
+    language: 'TypeScript',
+    description: 'AI-powered communication assistant for engineering leaders. Track workplace situations and analyze tone & intent across Slack, Gmail, and Zoom.',
+  },
+];
 
 export default function Component() {
   const { data, loading } = useQuery(Component.query, {
@@ -120,6 +147,47 @@ export default function Component() {
                   What&apos;s working for me—dev tools, workflows, and ways of thinking.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Open Source Projects */}
+        <section className={styles.projects}>
+          <div className="container">
+            <div className={styles.projectsHeader}>
+              <Heading className={styles.projectsTitle} level="h2">
+                Open source
+              </Heading>
+              <a
+                href="https://github.com/zd87pl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.viewAllLink}
+              >
+                View GitHub
+                <FiGithub size={16} />
+              </a>
+            </div>
+            <p className={styles.projectsDescription}>
+              A few things I&apos;ve been building and experimenting with.
+            </p>
+            <div className={styles.projectsGrid}>
+              {projects.map((project) => (
+                <a
+                  key={project.name}
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.projectCard}
+                >
+                  <div className={styles.projectHeader}>
+                    <span className={styles.projectName}>{project.name}</span>
+                    <FiExternalLink size={14} className={styles.projectLinkIcon} />
+                  </div>
+                  <p className={styles.projectDescription}>{project.description}</p>
+                  <span className={styles.projectLanguage}>{project.language}</span>
+                </a>
+              ))}
             </div>
           </div>
         </section>
