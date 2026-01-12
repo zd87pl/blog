@@ -6,6 +6,7 @@ import appConfig from 'app.config';
 
 import { NavigationMenu, SkipNavigationLink } from '../';
 import ThemeToggle from '../ThemeToggle';
+
 import styles from './Header.module.scss';
 
 let cx = classNames.bind(styles);
