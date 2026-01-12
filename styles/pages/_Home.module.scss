@@ -1,43 +1,269 @@
 @import 'styles/Variables';
 
 .home {
-  section {
-    margin-bottom: 8rem;
+  padding-top: $space-2xl;
+}
+
+// Hero Section
+.hero {
+  padding: $space-4xl 0;
+  text-align: center;
+
+  @media (min-width: $breakpoint-medium) {
+    padding: $space-4xl 0 $space-4xl;
   }
 }
 
-.heading {
-  font-size: 4.8rem;
-  text-align: center;
-  margin-bottom: 1rem;
-  line-height: 1.2;
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.description {
-  max-width: 100%;
-  font-size: 1.8rem;
-  margin: 0 auto 2rem;
-  padding: 0 1.5rem;
+.badge {
+  display: inline-block;
+  padding: $space-xs $space-md;
+  font-size: 1.3rem;
+  font-weight: $font-weight-medium;
+  color: var(--color-accent);
+  background-color: var(--color-bg-secondary);
+  border-radius: $radius-full;
+  margin-bottom: $space-xl;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.heroTitle {
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  line-height: $leading-tight;
+  letter-spacing: -0.03em;
+  margin-bottom: $space-lg;
+  color: var(--color-text);
+}
+
+.heroDescription {
+  font-size: clamp(1.7rem, 2.5vw, 2rem);
+  line-height: $leading-relaxed;
+  color: var(--color-text-secondary);
+  margin-bottom: $space-2xl;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-md;
 
   @media (min-width: $breakpoint-small) {
-    max-width: 60%;
+    flex-direction: row;
+    justify-content: center;
   }
 }
 
-.actions {
-  a[role='button'] {
-    margin: 0.5rem;
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-sm;
+  padding: $space-md $space-xl;
+  font-size: 1.6rem;
+  font-weight: $font-weight-semibold;
+  color: var(--color-bg);
+  background-color: var(--color-text);
+  border-radius: $radius-lg;
+  text-decoration: none;
+  transition: transform $transition-fast, box-shadow $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+    color: var(--color-bg);
   }
 }
 
-.posts .heading {
-  margin-bottom: 4rem;
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-sm;
+  padding: $space-md $space-xl;
+  font-size: 1.6rem;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  text-decoration: none;
+  transition: border-color $transition-fast, background-color $transition-fast;
+
+  &:hover {
+    border-color: var(--color-text);
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text);
+  }
 }
 
-.testimonials {
+// Featured Posts Section
+.featured {
+  padding: $space-3xl 0;
+}
+
+.sectionHeader {
   text-align: center;
+  margin-bottom: $space-3xl;
+}
 
-  .description {
-    margin-bottom: 6rem;
+.sectionTitle {
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  margin-bottom: $space-md;
+  color: var(--color-text);
+}
+
+.sectionDescription {
+  font-size: 1.8rem;
+  color: var(--color-text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.viewAll {
+  text-align: center;
+  margin-top: $space-3xl;
+}
+
+.viewAllLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-sm;
+  font-size: 1.6rem;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: var(--color-accent);
   }
+}
+
+// Newsletter Section
+.newsletter {
+  padding: $space-4xl 0;
+  background-color: var(--color-bg-secondary);
+  margin: $space-3xl 0;
+}
+
+.newsletterContent {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.newsletterTitle {
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  margin-bottom: $space-md;
+  color: var(--color-text);
+}
+
+.newsletterDescription {
+  font-size: 1.7rem;
+  color: var(--color-text-secondary);
+  margin-bottom: $space-xl;
+}
+
+.newsletterForm {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+
+  @media (min-width: $breakpoint-small) {
+    flex-direction: row;
+  }
+}
+
+.newsletterInput {
+  flex: 1;
+  padding: $space-md $space-lg;
+  font-size: 1.6rem;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  outline: none;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+
+  &:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-selection);
+  }
+}
+
+.newsletterButton {
+  padding: $space-md $space-xl;
+  font-size: 1.6rem;
+  font-weight: $font-weight-semibold;
+  color: var(--color-bg);
+  background-color: var(--color-text);
+  border: none;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: transform $transition-fast, box-shadow $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.newsletterPrivacy {
+  margin-top: $space-md;
+  font-size: 1.3rem;
+  color: var(--color-text-tertiary);
+}
+
+// Topics Section
+.topics {
+  padding: $space-3xl 0 $space-4xl;
+}
+
+.topicsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-md;
+
+  @media (min-width: $breakpoint-medium) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.topicCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-lg $space-xl;
+  background-color: var(--color-bg-secondary);
+  border-radius: $radius-lg;
+  text-decoration: none;
+  transition: transform $transition-fast, box-shadow $transition-fast, background-color $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+    background-color: var(--color-bg-tertiary);
+
+    .topicName {
+      color: var(--color-accent);
+    }
+  }
+}
+
+.topicName {
+  font-size: 1.5rem;
+  font-weight: $font-weight-medium;
+  color: var(--color-text);
+  transition: color $transition-fast;
 }

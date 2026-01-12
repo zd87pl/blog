@@ -1,128 +1,110 @@
 import classNames from 'classnames/bind';
-import {
-  FaFacebookF,
-  FaGithub,
-  FaInstagram,
-  FaLinkedinIn,
-  FaTwitter,
-  FaYoutube,
-} from 'react-icons/fa';
+import { FiTwitter, FiGithub, FiLinkedin, FiMail, FiRss } from 'react-icons/fi';
+import Link from 'next/link';
 import appConfig from 'app.config.js';
-
-import { NavigationMenu } from '../';
 
 import styles from './Footer.module.scss';
 
 let cx = classNames.bind(styles);
 
-/**
- * The Blueprint's Footer component
- * @return {React.ReactElement} The Footer component.
- */
 export default function Footer({ menuItems }) {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className={cx('footer')}>
       <div className="container">
-        {appConfig?.socialLinks && (
-          <div className={cx('social-links')}>
-            <ul aria-label="Social media">
-              {appConfig.socialLinks?.twitterUrl && (
-                <li>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cx('social-icon-link')}
-                    href={appConfig.socialLinks.twitterUrl}
-                  >
-                    <FaTwitter title="Twitter" className={cx('social-icon')} />
-                  </a>
-                </li>
-              )}
-
-              {appConfig.socialLinks?.facebookUrl && (
-                <li>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cx('social-icon-link')}
-                    href={appConfig.socialLinks.facebookUrl}
-                  >
-                    <FaFacebookF
-                      title="Facebook"
-                      className={cx('social-icon')}
-                    />
-                  </a>
-                </li>
-              )}
-
-              {appConfig.socialLinks?.instagramUrl && (
-                <li>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cx('social-icon-link')}
-                    href={appConfig.socialLinks.instagramUrl}
-                  >
-                    <FaInstagram
-                      title="Instagram"
-                      className={cx('social-icon')}
-                    />
-                  </a>
-                </li>
-              )}
-
-              {appConfig.socialLinks?.youtubeUrl && (
-                <li>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cx('social-icon-link')}
-                    href={appConfig.socialLinks.youtubeUrl}
-                  >
-                    <FaYoutube title="YouTube" className={cx('social-icon')} />
-                  </a>
-                </li>
-              )}
-
-              {appConfig.socialLinks?.githubUrl && (
-                <li>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cx('social-icon-link')}
-                    href={appConfig.socialLinks.githubUrl}
-                  >
-                    <FaGithub title="GitHub" className={cx('social-icon')} />
-                  </a>
-                </li>
-              )}
-
-              {appConfig.socialLinks?.linkedinUrl && (
-                <li>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cx('social-icon-link')}
-                    href={appConfig.socialLinks.linkedinUrl}
-                  >
-                    <FaLinkedinIn
-                      title="LinkedIn"
-                      className={cx('social-icon')}
-                    />
-                  </a>
-                </li>
-              )}
-            </ul>
+        <div className={cx('content')}>
+          <div className={cx('brand')}>
+            <Link href="/" className={cx('logo')}>
+              {appConfig.siteName || 'Blog'}
+            </Link>
+            <p className={cx('tagline')}>
+              {appConfig.siteTagline || 'Insights on Technology and Leadership'}
+            </p>
           </div>
-        )}
 
-        <NavigationMenu className={cx('nav')} menuItems={menuItems} />
+          {appConfig?.socialLinks && (
+            <div className={cx('social-links')}>
+              <ul aria-label="Social media">
+                {appConfig.socialLinks?.twitterUrl && (
+                  <li>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cx('social-icon-link')}
+                      href={appConfig.socialLinks.twitterUrl}
+                      aria-label="Twitter"
+                    >
+                      <FiTwitter size={20} />
+                    </a>
+                  </li>
+                )}
 
-        <div className={cx('copyright')}>
-          &copy; {new Date().getFullYear()} Blueprint Media &#183; Powered By{' '}
-          <a href="https://wpengine.com/headless-wordpress">
-            Headless Platform
-          </a>
+                {appConfig.socialLinks?.githubUrl && (
+                  <li>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cx('social-icon-link')}
+                      href={appConfig.socialLinks.githubUrl}
+                      aria-label="GitHub"
+                    >
+                      <FiGithub size={20} />
+                    </a>
+                  </li>
+                )}
+
+                {appConfig.socialLinks?.linkedinUrl && (
+                  <li>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cx('social-icon-link')}
+                      href={appConfig.socialLinks.linkedinUrl}
+                      aria-label="LinkedIn"
+                    >
+                      <FiLinkedin size={20} />
+                    </a>
+                  </li>
+                )}
+
+                {appConfig.socialLinks?.emailAddress && (
+                  <li>
+                    <a
+                      className={cx('social-icon-link')}
+                      href={`mailto:${appConfig.socialLinks.emailAddress}`}
+                      aria-label="Email"
+                    >
+                      <FiMail size={20} />
+                    </a>
+                  </li>
+                )}
+
+                <li>
+                  <a
+                    className={cx('social-icon-link')}
+                    href="/feed.xml"
+                    aria-label="RSS Feed"
+                  >
+                    <FiRss size={20} />
+                  </a>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className={cx('bottom')}>
+          <div className={cx('copyright')}>
+            &copy; {currentYear} {appConfig.author?.name || appConfig.siteName}. All rights reserved.
+          </div>
+          <nav className={cx('nav')}>
+            {menuItems?.map((item) => (
+              <Link key={item.id} href={item.uri ?? '#'}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>

@@ -1,3 +1,7 @@
+@import 'styles/Variables';
+
 .main {
   flex: 1;
+  background-color: var(--color-bg);
+  transition: background-color $transition-base;
 }

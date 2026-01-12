@@ -1,69 +1,90 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames/bind';
-import { FaBars, FaSearch } from 'react-icons/fa';
-import Image from 'next/image';
+import { FiMenu, FiX, FiSearch } from 'react-icons/fi';
 import Link from 'next/link';
 
 import { NavigationMenu, SkipNavigationLink } from '../';
+import ThemeToggle from '../ThemeToggle';
+import appConfig from 'app.config';
 
 import styles from './Header.module.scss';
 let cx = classNames.bind(styles);
-/**
- * A Header component
- * @param {Props} props The props object.
- * @param {string} props.className An optional className to be added to the container.
- * @return {React.ReactElement} The FeaturedImage component.
- */
+
 export default function Header({ className, menuItems }) {
   const [isNavShown, setIsNavShown] = useState(false);
 
+  const closeNav = useCallback(() => {
+    setIsNavShown(false);
+  }, []);
+
+  // Handle Escape key to close nav
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isNavShown) {
+        closeNav();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isNavShown, closeNav]);
+
+  // Prevent body scroll when nav is open
+  useEffect(() => {
+    if (isNavShown) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isNavShown]);
+
   const headerClasses = cx('header', className);
-  const navClasses = cx(
-    'primary-navigation',
-    isNavShown ? cx('show') : undefined
-  );
+  const navClasses = cx('primary-navigation', isNavShown ? 'show' : undefined);
 
   return (
     <header className={headerClasses}>
       <SkipNavigationLink />
       <div className="container">
         <div className={cx('bar')}>
-          <div className={cx('logo')}>
-            <Link legacyBehavior href="/">
-              <a title="Home">
-                <Image
-                  src="/logo.png"
-                  width={400}
-                  height={80}
-                  alt="Blueprint media logo"
-                  layout="responsive"
-                />
-              </a>
-            </Link>
+          <Link href="/" className={cx('logo')} onClick={closeNav}>
+            <span className={cx('logo-text')}>{appConfig.siteName || 'Blog'}</span>
+          </Link>
+
+          <div className={cx('actions')}>
+            <NavigationMenu
+              id={cx('primary-navigation')}
+              className={navClasses}
+              menuItems={menuItems}
+              onLinkClick={closeNav}
+            >
+              <li>
+                <Link href="/search" className={cx('nav-link')} onClick={closeNav}>
+                  <FiSearch size={18} />
+                  <span className="sr-only">Search</span>
+                </Link>
+              </li>
+              {/* Mobile-only close button and theme toggle */}
+              <li className={cx('mobile-actions')}>
+                <ThemeToggle />
+              </li>
+            </NavigationMenu>
+
+            <ThemeToggle className={cx('theme-toggle')} />
+
+            <button
+              type="button"
+              className={cx('nav-toggle', { 'nav-open': isNavShown })}
+              onClick={() => setIsNavShown(!isNavShown)}
+              aria-label={isNavShown ? 'Close navigation' : 'Open navigation'}
+              aria-controls={cx('primary-navigation')}
+              aria-expanded={isNavShown}
+            >
+              {isNavShown ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
           </div>
-          <button
-            type="button"
-            className={cx('nav-toggle')}
-            onClick={() => setIsNavShown(!isNavShown)}
-            aria-label="Toggle navigation"
-            aria-controls={cx('primary-navigation')}
-            aria-expanded={isNavShown}
-          >
-            <FaBars />
-          </button>
-          <NavigationMenu
-            id={cx('primary-navigation')}
-            className={navClasses}
-            menuItems={menuItems}
-          >
-            <li>
-              <Link legacyBehavior href="/search">
-                <a>
-                  <FaSearch title="Search" role="img" />
-                </a>
-              </Link>
-            </li>
-          </NavigationMenu>
         </div>
       </div>
     </header>

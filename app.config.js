@@ -1,50 +1,79 @@
 /**
- * Global application config file
+ * Personal Tech & Leadership Blog Configuration
  */
 const appConfig = {
   /**
+   * Site metadata for SEO/AEO
+   */
+  siteName: 'Tech & Leadership',
+  siteTagline: 'Insights on Technology, Engineering, and Leadership',
+  author: {
+    name: 'Your Name',
+    role: 'Engineering Leader & Tech Enthusiast',
+    bio: 'I write about software engineering, technology trends, and the art of building and leading high-performing teams.',
+    avatar: '/static/avatar.jpg',
+  },
+
+  /**
    * The number of posts to fetch per 'page'.
    */
-  postsPerPage: 9,
+  postsPerPage: 6,
 
   /**
    * The number of projects to fetch per 'page'.
    */
-  projectsPerPage: 5,
+  projectsPerPage: 4,
 
   /**
    * The number of post featured images that are above the fold for most screen sizes.
    * These images will be considered high priority and preloaded.
    */
-  postsAboveTheFold: 6,
+  postsAboveTheFold: 3,
 
   /**
    * The number of project featured images that are above the fold for most screen sizes.
    * These images will be considered high priority and preloaded.
    */
-  projectsAboveTheFold: 3,
+  projectsAboveTheFold: 2,
 
   /**
    * Displays a default Featured Image when a Post does not have one.
    */
-  archiveDisplayFeaturedImage: true,
+  archiveDisplayFeaturedImage: false,
 
   /**
-   * This app's primary color.
-   * @see {@link https://github.com/wpengine/atlas-blueprint-portfolio/blob/main/src/components/ThemeStyles/ThemeStyles.js}
+   * Content categories for the blog
    */
-  themeColor: 'blue',
+  categories: ['Technology', 'Leadership', 'Engineering', 'Career', 'Productivity'],
 
   /**
-   * @type {[key: 'twitterUrl' | 'facebookUrl' | 'instagramUrl' | 'youtubeUrl' | 'githubUrl' | 'linkedinUrl']: string}
+   * @type {[key: 'twitterUrl' | 'linkedinUrl' | 'githubUrl' | 'emailAddress']: string}
    */
   socialLinks: {
-    twitterUrl: 'https://twitter.com/wpengine',
-    facebookUrl: 'https://www.facebook.com/wpengine',
-    instagramUrl: 'https://www.instagram.com/wpengine/',
-    youtubeUrl: 'https://youtube.com/wpengine',
-    githubUrl: 'https://github.com/wpengine',
-    linkedinUrl: 'https://www.linkedin.com/company/wpengine',
+    twitterUrl: 'https://twitter.com/yourhandle',
+    linkedinUrl: 'https://www.linkedin.com/in/yourprofile',
+    githubUrl: 'https://github.com/yourusername',
+    emailAddress: 'hello@yourdomain.com',
+  },
+
+  /**
+   * Newsletter settings
+   */
+  newsletter: {
+    enabled: true,
+    title: 'Stay Updated',
+    description: 'Get weekly insights on tech and leadership delivered to your inbox.',
+    placeholder: 'Enter your email',
+    buttonText: 'Subscribe',
+  },
+
+  /**
+   * SEO defaults
+   */
+  seo: {
+    defaultImage: '/static/og-image.jpg',
+    twitterHandle: '@yourhandle',
+    locale: 'en_US',
   },
 };
 
