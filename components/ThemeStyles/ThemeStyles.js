@@ -85,7 +85,15 @@ export function ThemeProvider({ children }) {
 
 export default function ThemeStyles() {
   const { theme } = useTheme();
-  const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Always render light theme CSS vars on server and initial client render
+  // to prevent hydration mismatch
+  const currentTheme = mounted && theme === 'dark' ? darkTheme : lightTheme;
 
   const cssVars = Object.entries(currentTheme)
     .map(([key, value]) => `${key}: ${value};`)

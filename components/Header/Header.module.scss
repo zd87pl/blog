@@ -22,6 +22,7 @@
   align-items: center;
   text-decoration: none;
   transition: opacity $transition-fast;
+  z-index: 101;
 
   &:hover {
     opacity: 0.8;
@@ -54,9 +55,17 @@
   border-radius: $radius-md;
   cursor: pointer;
   transition: background-color $transition-fast;
+  z-index: 101;
+  position: relative;
 
   &:hover {
     background-color: var(--color-bg-secondary);
+  }
+
+  &.nav-open {
+    position: fixed;
+    top: $space-lg;
+    right: $space-lg;
   }
 
   @media (min-width: $breakpoint-medium) {
@@ -146,7 +155,22 @@
   padding: 0 !important;
   border-radius: $radius-md;
 
+  @media (max-width: $breakpoint-medium - 1) {
+    width: auto !important;
+    height: auto !important;
+  }
+
   &:hover {
     background-color: var(--color-bg-secondary);
+  }
+}
+
+.mobile-actions {
+  margin-top: $space-xl;
+  padding-top: $space-xl;
+  border-top: 1px solid var(--color-border);
+
+  @media (min-width: $breakpoint-medium) {
+    display: none;
   }
 }

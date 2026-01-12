@@ -100,7 +100,14 @@ export default function Component() {
                 <p className={styles.newsletterDescription}>
                   {appConfig.newsletter?.description || 'Get weekly insights on tech and leadership delivered to your inbox.'}
                 </p>
-                <form className={styles.newsletterForm}>
+                <form
+                  className={styles.newsletterForm}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    // TODO: Implement newsletter subscription with your preferred service
+                    console.log('Newsletter subscription submitted');
+                  }}
+                >
                   <input
                     type="email"
                     placeholder={appConfig.newsletter?.placeholder || 'Enter your email'}

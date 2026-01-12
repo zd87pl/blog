@@ -35,6 +35,13 @@ export default function SEO({
   const metaDescription = description || siteDescription;
   const ogImage = imageUrl || defaultImage;
 
+  // Helper to remove undefined/null values from objects
+  const cleanObject = (obj) => {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([, value]) => value !== undefined && value !== null)
+    );
+  };
+
   // Generate structured data for SEO/AEO
   const generateStructuredData = () => {
     const baseData = {
@@ -42,37 +49,37 @@ export default function SEO({
     };
 
     if (type === 'article' && article) {
-      return {
+      return cleanObject({
         ...baseData,
         '@type': 'Article',
         headline: title,
         description: metaDescription,
         image: ogImage,
-        author: {
+        author: cleanObject({
           '@type': 'Person',
           name: article.author || authorName,
           url: appConfig.socialLinks?.linkedinUrl,
-        },
-        publisher: {
+        }),
+        publisher: cleanObject({
           '@type': 'Person',
           name: authorName,
-          logo: {
+          logo: cleanObject({
             '@type': 'ImageObject',
             url: appConfig.author?.avatar || '/static/avatar.jpg',
-          },
-        },
+          }),
+        }),
         datePublished: article.publishedTime,
         dateModified: article.modifiedTime || article.publishedTime,
-        mainEntityOfPage: {
+        mainEntityOfPage: url ? {
           '@type': 'WebPage',
           '@id': url,
-        },
+        } : undefined,
         keywords: article.tags?.join(', '),
-      };
+      });
     }
 
     if (type === 'profile') {
-      return {
+      return cleanObject({
         ...baseData,
         '@type': 'Person',
         name: authorName,
@@ -85,11 +92,11 @@ export default function SEO({
           appConfig.socialLinks?.linkedinUrl,
           appConfig.socialLinks?.githubUrl,
         ].filter(Boolean),
-      };
+      });
     }
 
     // Default website structured data
-    return {
+    const websiteData = cleanObject({
       ...baseData,
       '@type': 'WebSite',
       name: siteName,
@@ -99,15 +106,21 @@ export default function SEO({
         '@type': 'Person',
         name: authorName,
       },
-      potentialAction: {
+    });
+
+    // Only add search action if url is defined
+    if (url) {
+      websiteData.potentialAction = {
         '@type': 'SearchAction',
         target: {
           '@type': 'EntryPoint',
           urlTemplate: `${url}/search?q={search_term_string}`,
         },
         'query-input': 'required name=search_term_string',
-      },
-    };
+      };
+    }
+
+    return websiteData;
   };
 
   return (

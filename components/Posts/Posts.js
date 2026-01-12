@@ -78,7 +78,7 @@ function Posts({ posts, intro, id, compact = false }) {
                 </h3>
 
                 {post.excerpt && (
-                  <p
+                  <div
                     className={cx('excerpt')}
                     dangerouslySetInnerHTML={{ __html: post.excerpt }}
                   />
