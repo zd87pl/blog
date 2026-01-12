@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import { FiSun, FiMoon } from 'react-icons/fi';
+
 import { useTheme } from '../ThemeStyles/ThemeStyles';
 import styles from './ThemeToggle.module.scss';
 

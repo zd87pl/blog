@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import Head from 'next/head';
 
 const ThemeContext = createContext({
   theme: 'light',
@@ -73,7 +74,7 @@ export function ThemeProvider({ children }) {
   }, [theme, mounted]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
   return (
@@ -97,21 +98,13 @@ export default function ThemeStyles() {
 
   const cssVars = Object.entries(currentTheme)
     .map(([key, value]) => `${key}: ${value};`)
-    .join('\n        ');
+    .join(' ');
+
+  const css = `:root { ${cssVars} } ::selection { background: var(--color-selection); } ::-moz-selection { background: var(--color-selection); }`;
 
   return (
-    <style jsx global>{`
-      :root {
-        ${cssVars}
-      }
-
-      ::selection {
-        background: var(--color-selection);
-      }
-
-      ::-moz-selection {
-        background: var(--color-selection);
-      }
-    `}</style>
+    <Head>
+      <style key="theme-styles">{css}</style>
+    </Head>
   );
 }

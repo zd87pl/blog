@@ -2,12 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames/bind';
 import { FiMenu, FiX, FiSearch } from 'react-icons/fi';
 import Link from 'next/link';
+import appConfig from 'app.config';
 
 import { NavigationMenu, SkipNavigationLink } from '../';
 import ThemeToggle from '../ThemeToggle';
-import appConfig from 'app.config';
-
 import styles from './Header.module.scss';
+
 let cx = classNames.bind(styles);
 
 export default function Header({ className, menuItems }) {
@@ -49,8 +49,10 @@ export default function Header({ className, menuItems }) {
       <SkipNavigationLink />
       <div className="container">
         <div className={cx('bar')}>
-          <Link href="/" className={cx('logo')} onClick={closeNav}>
-            <span className={cx('logo-text')}>{appConfig.siteName || 'Blog'}</span>
+          <Link legacyBehavior href="/">
+            <a className={cx('logo')} onClick={closeNav}>
+              <span className={cx('logo-text')}>{appConfig.siteName || 'Blog'}</span>
+            </a>
           </Link>
 
           <div className={cx('actions')}>
@@ -61,9 +63,11 @@ export default function Header({ className, menuItems }) {
               onLinkClick={closeNav}
             >
               <li>
-                <Link href="/search" className={cx('nav-link')} onClick={closeNav}>
-                  <FiSearch size={18} />
-                  <span className="sr-only">Search</span>
+                <Link legacyBehavior href="/search">
+                  <a className={cx('nav-link')} onClick={closeNav}>
+                    <FiSearch size={18} />
+                    <span className="sr-only">Search</span>
+                  </a>
                 </Link>
               </li>
               {/* Mobile-only close button and theme toggle */}

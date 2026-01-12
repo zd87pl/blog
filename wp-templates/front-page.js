@@ -1,10 +1,10 @@
 import * as MENUS from 'constants/menus';
-
 import { useQuery, gql } from '@apollo/client';
-import { FiArrowRight } from 'react-icons/fi';
+import { FiArrowRight, FiMail } from 'react-icons/fi';
 import Link from 'next/link';
-import styles from 'styles/pages/_Home.module.scss';
 import appConfig from 'app.config';
+import styles from 'styles/pages/_Home.module.scss';
+
 import {
   Main,
   Heading,
@@ -16,7 +16,7 @@ import {
 } from 'components';
 import { BlogInfoFragment } from 'fragments/GeneralSettings';
 
-const postsPerPage = 6;
+const postsPerPage = 3;
 
 export default function Component() {
   const { data, loading } = useQuery(Component.query, {
@@ -46,59 +46,113 @@ export default function Component() {
       <Header menuItems={primaryMenu} />
 
       <Main className={styles.home}>
-        <section className={styles.hero}>
+        {/* Welcome Section */}
+        <section className={styles.welcome}>
           <div className="container">
-            <div className={styles.heroContent}>
-              <span className={styles.badge}>Tech & Leadership Blog</span>
-              <Heading className={styles.heroTitle} level="h1">
-                {appConfig.author?.bio || 'Insights on building great software and leading high-performing teams.'}
+            <div className={styles.welcomeContent}>
+              <p className={styles.greeting}>Hey, I&apos;m</p>
+              <Heading className={styles.name} level="h1">
+                {appConfig.author?.name || 'Your Name'}
               </Heading>
-              <p className={styles.heroDescription}>
-                Welcome! I share my thoughts on software engineering, technology trends,
-                and the lessons I&apos;ve learned about leadership and team building.
+              <p className={styles.intro}>
+                I&apos;m a software engineer who&apos;s spent the past decade building products
+                and, more recently, learning what it takes to build teams. This is my corner
+                of the internet where I think out loud about the craft of engineering,
+                the challenges of leadership, and everything in between.
               </p>
-              <div className={styles.heroActions}>
-                <Link href="/posts" className={styles.primaryButton}>
-                  Read Articles
-                  <FiArrowRight size={18} />
+              <p className={styles.intro}>
+                I don&apos;t have all the answers—far from it—but I find that writing helps
+                me make sense of what I&apos;m learning. If any of it resonates or sparks
+                a thought, I&apos;d love to hear from you.
+              </p>
+              <div className={styles.welcomeActions}>
+                <Link legacyBehavior href="/about">
+                  <a className={styles.textLink}>
+                    More about me
+                    <FiArrowRight size={16} />
+                  </a>
                 </Link>
-                <Link href="/about" className={styles.secondaryButton}>
-                  About Me
-                </Link>
+                <a
+                  href={`mailto:${appConfig.socialLinks?.emailAddress || 'hello@example.com'}`}
+                  className={styles.textLink}
+                >
+                  Say hello
+                  <FiMail size={16} />
+                </a>
               </div>
             </div>
           </div>
         </section>
 
-        <section className={styles.featured}>
+        {/* What I Write About */}
+        <section className={styles.topics}>
           <div className="container">
-            <div className={styles.sectionHeader}>
-              <Heading className={styles.sectionTitle} level="h2">
-                Latest Articles
+            <div className={styles.topicsHeader}>
+              <Heading className={styles.topicsTitle} level="h2">
+                What I write about
               </Heading>
-              <p className={styles.sectionDescription}>
-                Thoughts on technology, engineering practices, and leadership lessons.
+              <p className={styles.topicsDescription}>
+                Mostly things I&apos;m figuring out as I go.
               </p>
             </div>
-            <Posts posts={data.posts?.nodes} id="posts-list" />
-            <div className={styles.viewAll}>
-              <Link href="/posts" className={styles.viewAllLink}>
-                View all articles
-                <FiArrowRight size={16} />
-              </Link>
+            <div className={styles.topicsGrid}>
+              <div className={styles.topicItem}>
+                <span className={styles.topicLabel}>Engineering</span>
+                <p className={styles.topicText}>
+                  Architecture decisions, code quality, and the joy of solving hard problems.
+                </p>
+              </div>
+              <div className={styles.topicItem}>
+                <span className={styles.topicLabel}>Leadership</span>
+                <p className={styles.topicText}>
+                  Building teams, giving feedback, and navigating the transition from IC to manager.
+                </p>
+              </div>
+              <div className={styles.topicItem}>
+                <span className={styles.topicLabel}>Career</span>
+                <p className={styles.topicText}>
+                  Growth, decisions, and the occasional reflection on where this all leads.
+                </p>
+              </div>
+              <div className={styles.topicItem}>
+                <span className={styles.topicLabel}>Tools & Process</span>
+                <p className={styles.topicText}>
+                  What&apos;s working for me—dev tools, workflows, and ways of thinking.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
+        {/* Recent Writing */}
+        <section className={styles.recent}>
+          <div className="container">
+            <div className={styles.recentHeader}>
+              <Heading className={styles.recentTitle} level="h2">
+                Recent writing
+              </Heading>
+              <Link legacyBehavior href="/posts">
+                <a className={styles.viewAllLink}>
+                  View all
+                  <FiArrowRight size={16} />
+                </a>
+              </Link>
+            </div>
+            <Posts posts={data.posts?.nodes} id="posts-list" />
+          </div>
+        </section>
+
+        {/* Newsletter */}
         {appConfig.newsletter?.enabled && (
           <section className={styles.newsletter}>
             <div className="container">
               <div className={styles.newsletterContent}>
                 <Heading className={styles.newsletterTitle} level="h3">
-                  {appConfig.newsletter?.title || 'Stay Updated'}
+                  Want to stay in the loop?
                 </Heading>
                 <p className={styles.newsletterDescription}>
-                  {appConfig.newsletter?.description || 'Get weekly insights on tech and leadership delivered to your inbox.'}
+                  I send occasional updates when I publish something new.
+                  No spam, no sales pitches—just writing.
                 </p>
                 <form
                   className={styles.newsletterForm}
@@ -110,43 +164,18 @@ export default function Component() {
                 >
                   <input
                     type="email"
-                    placeholder={appConfig.newsletter?.placeholder || 'Enter your email'}
+                    placeholder="your@email.com"
                     className={styles.newsletterInput}
                     required
                   />
                   <button type="submit" className={styles.newsletterButton}>
-                    {appConfig.newsletter?.buttonText || 'Subscribe'}
+                    Subscribe
                   </button>
                 </form>
-                <p className={styles.newsletterPrivacy}>
-                  No spam. Unsubscribe anytime.
-                </p>
               </div>
             </div>
           </section>
         )}
-
-        <section className={styles.topics}>
-          <div className="container">
-            <div className={styles.sectionHeader}>
-              <Heading className={styles.sectionTitle} level="h2">
-                Topics I Write About
-              </Heading>
-            </div>
-            <div className={styles.topicsGrid}>
-              {(appConfig.categories || ['Technology', 'Leadership', 'Engineering', 'Career']).map((topic) => (
-                <Link
-                  key={topic}
-                  href={`/category/${topic.toLowerCase()}`}
-                  className={styles.topicCard}
-                >
-                  <span className={styles.topicName}>{topic}</span>
-                  <FiArrowRight size={16} />
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
       </Main>
 
       <Footer menuItems={footerMenu} />

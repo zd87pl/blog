@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import { FiTwitter, FiGithub, FiLinkedin, FiMail, FiRss } from 'react-icons/fi';
 import Link from 'next/link';
-import appConfig from 'app.config.js';
+import appConfig from 'app.config';
 
 import styles from './Footer.module.scss';
 
@@ -15,8 +15,10 @@ export default function Footer({ menuItems }) {
       <div className="container">
         <div className={cx('content')}>
           <div className={cx('brand')}>
-            <Link href="/" className={cx('logo')}>
-              {appConfig.siteName || 'Blog'}
+            <Link legacyBehavior href="/">
+              <a className={cx('logo')}>
+                {appConfig.siteName || 'Blog'}
+              </a>
             </Link>
             <p className={cx('tagline')}>
               {appConfig.siteTagline || 'Insights on Technology and Leadership'}
@@ -100,8 +102,8 @@ export default function Footer({ menuItems }) {
           </div>
           <nav className={cx('nav')}>
             {menuItems?.map((item) => (
-              <Link key={item.id} href={item.uri ?? '#'}>
-                {item.label}
+              <Link legacyBehavior key={item.id} href={item.uri ?? '#'}>
+                <a>{item.label}</a>
               </Link>
             ))}
           </nav>
