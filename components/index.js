@@ -23,6 +23,8 @@ import SearchInput from './SearchInput';
 import SearchResults from './SearchResults';
 import LoadingSearchResult from './LoadingSearchResult';
 import SearchRecommendations from './SearchRecommendations';
+import ThemeToggle from './ThemeToggle';
+import ThemeStyles, { ThemeProvider, useTheme } from './ThemeStyles/ThemeStyles';
 
 export {
   Button,
@@ -50,4 +52,8 @@ export {
   SearchResults,
   SearchRecommendations,
   LoadingSearchResult,
+  ThemeToggle,
+  ThemeStyles,
+  ThemeProvider,
+  useTheme,
 };

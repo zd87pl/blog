@@ -1,41 +1,108 @@
-import appConfig from '../../app.config';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-const themes = {
-  blue: {
-    '--color-black': '#000',
-    '--color-primary': '#000066',
-    '--color-secondary': '#0969da',
-    '--color-tertiary': '#CCCCCC',
-    '--color-white': '#FFFFFF',
-  },
-  red: {
-    '--color-black': '#000',
-    '--color-primary': '#660000',
-    '--color-secondary': '#B50505',
-    '--color-tertiary': '#CCCCCC',
-    '--color-white': '#FFFFFF',
-  },
-  green: {
-    '--color-black': '#000',
-    '--color-primary': '#006600',
-    '--color-secondary': '#006827',
-    '--color-tertiary': '#CCCCCC',
-    '--color-white': '#FFFFFF',
-  },
+const ThemeContext = createContext({
+  theme: 'light',
+  toggleTheme: () => {},
+});
+
+export const useTheme = () => useContext(ThemeContext);
+
+const lightTheme = {
+  '--color-bg': '#ffffff',
+  '--color-bg-secondary': '#f8fafc',
+  '--color-bg-tertiary': '#f1f5f9',
+  '--color-text': '#0f172a',
+  '--color-text-secondary': '#475569',
+  '--color-text-tertiary': '#64748b',
+  '--color-border': '#e2e8f0',
+  '--color-border-light': '#f1f5f9',
+  '--color-primary': '#0f172a',
+  '--color-primary-hover': '#1e293b',
+  '--color-accent': '#3b82f6',
+  '--color-accent-hover': '#2563eb',
+  '--color-white': '#ffffff',
+  '--color-black': '#0f172a',
+  '--color-card-bg': '#ffffff',
+  '--color-card-shadow': 'rgba(0, 0, 0, 0.04)',
+  '--color-code-bg': '#f8fafc',
+  '--color-selection': 'rgba(59, 130, 246, 0.2)',
 };
 
-export default function ThemeStyles() {
-  const themeColor = appConfig?.themeColor ?? 'blue';
+const darkTheme = {
+  '--color-bg': '#0f172a',
+  '--color-bg-secondary': '#1e293b',
+  '--color-bg-tertiary': '#334155',
+  '--color-text': '#f1f5f9',
+  '--color-text-secondary': '#94a3b8',
+  '--color-text-tertiary': '#64748b',
+  '--color-border': '#334155',
+  '--color-border-light': '#1e293b',
+  '--color-primary': '#f1f5f9',
+  '--color-primary-hover': '#ffffff',
+  '--color-accent': '#60a5fa',
+  '--color-accent-hover': '#93c5fd',
+  '--color-white': '#f1f5f9',
+  '--color-black': '#0f172a',
+  '--color-card-bg': '#1e293b',
+  '--color-card-shadow': 'rgba(0, 0, 0, 0.2)',
+  '--color-code-bg': '#1e293b',
+  '--color-selection': 'rgba(96, 165, 250, 0.3)',
+};
+
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState('light');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else if (prefersDark) {
+      setTheme('dark');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('theme', theme);
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme, mounted]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   return (
-    // eslint-disable-next-line react/no-unknown-property
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+export default function ThemeStyles() {
+  const { theme } = useTheme();
+  const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
+
+  const cssVars = Object.entries(currentTheme)
+    .map(([key, value]) => `${key}: ${value};`)
+    .join('\n        ');
+
+  return (
     <style jsx global>{`
       :root {
-        --color-black: ${themes[themeColor]['--color-black']};
-        --color-primary: ${themes[themeColor]['--color-primary']};
-        --color-secondary: ${themes[themeColor]['--color-secondary']};
-        --color-tertiary: ${themes[themeColor]['--color-tertiary']};
-        --color-white: ${themes[themeColor]['--color-white']};
+        ${cssVars}
+      }
+
+      ::selection {
+        background: var(--color-selection);
+      }
+
+      ::-moz-selection {
+        background: var(--color-selection);
       }
     `}</style>
   );

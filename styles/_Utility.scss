@@ -1,3 +1,5 @@
+@import 'Variables';
+
 // Utility Module
 // ––––––––––––––––––––––––––––––––––––––––––––––––––
 
@@ -19,10 +21,20 @@
   float: right;
 }
 
+// Text alignment
 .text-center {
   text-align: center;
 }
 
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// Screen reader only
 .sr-only {
   position: absolute;
   width: 1px;
@@ -40,5 +52,83 @@
     margin: 0;
     overflow: auto;
     clip: auto;
+  }
+}
+
+// Display utilities
+.hidden {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Gap utilities
+.gap-2 {
+  gap: $space-sm;
+}
+
+.gap-3 {
+  gap: $space-md;
+}
+
+.gap-4 {
+  gap: $space-lg;
+}
+
+// Width utilities
+.w-full {
+  width: 100%;
+}
+
+.max-w-prose {
+  max-width: $content-max-width;
+}
+
+// Border utilities
+.border-bottom {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.border-top {
+  border-top: 1px solid var(--color-border);
+}
+
+// Background utilities
+.bg-secondary {
+  background-color: var(--color-bg-secondary);
+}
+
+// Responsive visibility
+.hide-mobile {
+  @media (max-width: $breakpoint-medium - 1) {
+    display: none !important;
+  }
+}
+
+.show-mobile {
+  @media (min-width: $breakpoint-medium) {
+    display: none !important;
   }
 }

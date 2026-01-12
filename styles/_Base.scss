@@ -3,30 +3,34 @@
 // Base Module
 // ––––––––––––––––––––––––––––––––––––––––––––––––––
 
-// Set box-sizing globally to handle padding and border widths
 *,
 *:after,
 *:before {
   box-sizing: inherit;
 }
 
-// The base font-size is set at 62.5% for having the convenience
-// of sizing rems in a way that is similar to using px: 1.6rem = 16px
 html {
   box-sizing: border-box;
   font-size: 62.5%;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   font-family: $font-family;
-  font-size: 1.6em;
+  font-size: 1.7rem;
   font-weight: $font-weight-normal;
-  letter-spacing: 0.01em;
-  line-height: 1.6;
+  letter-spacing: -0.01em;
+  line-height: $leading-relaxed;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color $transition-base, color $transition-base;
 }
 
 img {
   max-width: 100%;
+  height: auto;
 }
 
 video {
@@ -45,38 +49,111 @@ ul {
   dl,
   ol,
   ul {
-    font-size: 90%;
-    margin: 1.5rem 0 1.5rem 3rem;
+    margin: $space-md 0 $space-md $space-xl;
   }
 }
+
 ol {
-  list-style: decimal inside;
+  list-style: decimal outside;
+  padding-left: $space-lg;
 }
+
 ul {
-  list-style: circle inside;
+  list-style: disc outside;
+  padding-left: $space-lg;
+}
+
+li {
+  margin-bottom: $space-sm;
 }
 
 dt {
-  font-weight: $font-weight-extra-bold;
+  font-weight: $font-weight-bold;
 }
 
 // Dividers
 hr {
   border: 0;
-  border-top: 0.1rem solid var(--color-primary);
-  margin: 3rem 0;
+  border-top: 1px solid var(--color-border);
+  margin: $space-3xl 0;
 }
 
+// Main Layout
 #__next {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
 }
 
+// Alert Styles
 .alert-error {
-  background-color: #fff5f5;
-  border: 1px solid #fed6d6;
-  border-radius: 0.25rem;
-  color: #c53030;
-  padding: 1rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: $radius-md;
+  color: #dc2626;
+  padding: $space-md;
+}
+
+// Focus Styles
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+// Blockquote
+blockquote {
+  margin: $space-2xl 0;
+  padding: $space-lg $space-2xl;
+  border-left: 4px solid var(--color-accent);
+  background-color: var(--color-bg-secondary);
+  border-radius: 0 $radius-md $radius-md 0;
+  font-size: 1.9rem;
+  font-style: italic;
+  color: var(--color-text-secondary);
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Code
+code {
+  font-family: $font-family-mono;
+  font-size: 0.875em;
+  background-color: var(--color-code-bg);
+  padding: 0.2em 0.4em;
+  border-radius: $radius-sm;
+}
+
+pre {
+  font-family: $font-family-mono;
+  font-size: 1.4rem;
+  background-color: var(--color-code-bg);
+  padding: $space-lg;
+  border-radius: $radius-lg;
+  overflow-x: auto;
+
+  code {
+    background: none;
+    padding: 0;
+  }
+}
+
+// Tables
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: $space-2xl 0;
+}
+
+th,
+td {
+  padding: $space-md;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  font-weight: $font-weight-semibold;
+  background-color: var(--color-bg-secondary);
 }

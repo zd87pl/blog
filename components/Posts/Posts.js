@@ -2,7 +2,7 @@ import React from 'react';
 import { gql } from '@apollo/client';
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import { Heading, FeaturedImage, PostInfo } from 'components';
+import { FeaturedImage, FormatDate } from 'components';
 import appConfig from 'app.config';
 import useFocusFirstNewResult from 'hooks/useFocusFirstNewResult';
 
@@ -10,69 +10,83 @@ import styles from './Posts.module.scss';
 let cx = classNames.bind(styles);
 
 /**
- * Renders a list of Post items
+ * Renders a list of Post items with a clean card design
  * @param {Props} props The props object.
  * @param {Post[]} props.posts The array of post items.
  * @param {string} props.id The unique id for this component.
  * @param {string} props.intro Message to show as an introduction text.
- * @returns {React.ReactElement} The Projects component
+ * @param {boolean} props.compact Whether to show compact cards without images.
+ * @returns {React.ReactElement} The Posts component
  */
-function Posts({ posts, intro, id }) {
+function Posts({ posts, intro, id, compact = false }) {
   const { firstNewResultRef, firstNewResultIndex } =
     useFocusFirstNewResult(posts);
 
-  return (
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <section {...(id && { id })}>
-      {intro && <p>{intro}</p>}
-      <div className={cx('post-list')}>
-        {posts?.map((post, i) => {
-          const isFirstNewResult = i === firstNewResultIndex;
-          let image = post?.featuredImage?.node;
+  if (!posts || posts.length === 0) {
+    return (
+      <section {...(id && { id })}>
+        <p className={cx('no-posts')}>No posts found.</p>
+      </section>
+    );
+  }
 
-          if (!image && appConfig.archiveDisplayFeaturedImage) {
-            image = {
-              sourceUrl: '/static/banner.jpeg',
-              altText: 'Downtown Austin, Texas skyline',
-            };
-          }
+  return (
+    <section {...(id && { id })}>
+      {intro && <p className={cx('intro')}>{intro}</p>}
+      <div className={cx('post-list', { compact })}>
+        {posts.map((post, i) => {
+          const isFirstNewResult = i === firstNewResultIndex;
+          const image = post?.featuredImage?.node;
+          const hasImage = image && !compact;
 
           return (
-            <div
-              className={cx('container')}
-              key={post.id ?? ''}
+            <article
+              className={cx('card', { 'has-image': hasImage })}
+              key={post.id ?? i}
               id={`post-${post.id}`}
             >
-              <div className={cx('card')}>
-                <Link legacyBehavior href={post?.uri ?? '#'}>
-                  <a className={cx('image-holder')} tabIndex="-1">
-                    <FeaturedImage
-                      className={cx('image')}
-                      image={image}
-                      width={340}
-                      height={340}
-                      priority={i < appConfig.postsAboveTheFold}
-                    />
-                  </a>
+              {hasImage && (
+                <Link href={post?.uri ?? '#'} className={cx('image-link')} tabIndex={-1}>
+                  <FeaturedImage
+                    className={cx('image')}
+                    image={image}
+                    width={400}
+                    height={225}
+                    priority={i < appConfig.postsAboveTheFold}
+                  />
                 </Link>
+              )}
 
-                <Heading level="h4" className={cx('header')}>
-                  <Link legacyBehavior href={post?.uri ?? '#'}>
-                    <a ref={isFirstNewResult ? firstNewResultRef : null}>
-                      {post.title}
-                    </a>
+              <div className={cx('content')}>
+                <div className={cx('meta')}>
+                  <FormatDate date={post?.date} />
+                  {post?.author?.node?.name && (
+                    <>
+                      <span className={cx('separator')}>·</span>
+                      <span className={cx('author')}>{post.author.node.name}</span>
+                    </>
+                  )}
+                </div>
+
+                <h3 className={cx('title')}>
+                  <Link
+                    href={post?.uri ?? '#'}
+                    ref={isFirstNewResult ? firstNewResultRef : null}
+                  >
+                    {post.title}
                   </Link>
-                </Heading>
-                <PostInfo
-                  className={cx('info')}
-                  author={post?.author?.node?.name}
-                  date={post?.date}
-                />
+                </h3>
+
+                {post.excerpt && (
+                  <p
+                    className={cx('excerpt')}
+                    dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                  />
+                )}
               </div>
-            </div>
+            </article>
           );
         })}
-        {posts && posts?.length < 1 && <p>No posts found.</p>}
       </div>
     </section>
   );
@@ -86,6 +100,7 @@ Posts.fragments = {
       date
       uri
       title
+      excerpt
       author {
         node {
           name

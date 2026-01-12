@@ -1,3 +1,5 @@
+@import 'Variables';
+
 // Spacing Module
 // ––––––––––––––––––––––––––––––––––––––––––––––––––
 
@@ -6,14 +8,14 @@ button,
 dd,
 dt,
 li {
-  margin-bottom: 1rem;
+  margin-bottom: $space-sm;
 }
 
 fieldset,
 input,
 select,
 textarea {
-  margin-bottom: 1.5rem;
+  margin-bottom: $space-md;
 }
 
 blockquote,
@@ -25,5 +27,28 @@ p,
 pre,
 table,
 ul {
-  margin-bottom: 2.5rem;
+  margin-bottom: $space-lg;
 }
+
+// Spacing utilities
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: $space-xs; }
+.mt-2 { margin-top: $space-sm; }
+.mt-3 { margin-top: $space-md; }
+.mt-4 { margin-top: $space-lg; }
+.mt-5 { margin-top: $space-xl; }
+.mt-6 { margin-top: $space-2xl; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: $space-xs; }
+.mb-2 { margin-bottom: $space-sm; }
+.mb-3 { margin-bottom: $space-md; }
+.mb-4 { margin-bottom: $space-lg; }
+.mb-5 { margin-bottom: $space-xl; }
+.mb-6 { margin-bottom: $space-2xl; }
+
+.py-4 { padding-top: $space-lg; padding-bottom: $space-lg; }
+.py-5 { padding-top: $space-xl; padding-bottom: $space-xl; }
+.py-6 { padding-top: $space-2xl; padding-bottom: $space-2xl; }
+.py-8 { padding-top: $space-3xl; padding-bottom: $space-3xl; }
+.py-10 { padding-top: $space-4xl; padding-bottom: $space-4xl; }

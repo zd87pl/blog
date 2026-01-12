@@ -1,120 +1,147 @@
 import * as MENUS from 'constants/menus';
 
 import { useQuery, gql } from '@apollo/client';
-import { FaArrowRight } from 'react-icons/fa';
+import { FiArrowRight } from 'react-icons/fi';
+import Link from 'next/link';
 import styles from 'styles/pages/_Home.module.scss';
+import appConfig from 'app.config';
 import {
-  EntryHeader,
   Main,
-  Button,
   Heading,
-  CTA,
   NavigationMenu,
   SEO,
   Header,
   Footer,
   Posts,
-  Testimonials,
 } from 'components';
 import { BlogInfoFragment } from 'fragments/GeneralSettings';
 
-const postsPerPage = 3;
+const postsPerPage = 6;
 
 export default function Component() {
   const { data, loading } = useQuery(Component.query, {
     variables: Component.variables(),
   });
+
   if (loading) {
     return null;
   }
 
   const { title: siteTitle, description: siteDescription } =
-    data?.generalSettings;
+    data?.generalSettings ?? {};
   const primaryMenu = data?.headerMenuItems?.nodes ?? [];
   const footerMenu = data?.footerMenuItems?.nodes ?? [];
 
-  const mainBanner = {
-    sourceUrl: '/static/banner.jpeg',
-    mediaDetails: { width: 1200, height: 600 },
-    altText: 'Portfolio Banner',
-  };
+  const pageTitle = appConfig.siteName || siteTitle;
+  const pageDescription = appConfig.siteTagline || siteDescription;
+
   return (
     <>
-      <SEO title={siteTitle} description={siteDescription} />
-
-      <Header
-        title={siteTitle}
-        description={siteDescription}
-        menuItems={primaryMenu}
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        imageUrl={appConfig.seo?.defaultImage}
       />
 
+      <Header menuItems={primaryMenu} />
+
       <Main className={styles.home}>
-        <EntryHeader image={mainBanner} />
-        <div className="container">
-          <section className="hero text-center">
-            <Heading className={styles.heading} level="h1">
-              Welcome to your Blueprint
-            </Heading>
-            <p className={styles.description}>
-              Achieve unprecedented performance with modern frameworks and the
-              world&apos;s #1 open source CMS in one powerful headless platform.{' '}
-            </p>
-            <div className={styles.actions}>
-              <Button styleType="secondary" href="/contact-us">
-                GET STARTED
-              </Button>
-              <Button styleType="primary" href="/about">
-                LEARN MORE
-              </Button>
+        <section className={styles.hero}>
+          <div className="container">
+            <div className={styles.heroContent}>
+              <span className={styles.badge}>Tech & Leadership Blog</span>
+              <Heading className={styles.heroTitle} level="h1">
+                {appConfig.author?.bio || 'Insights on building great software and leading high-performing teams.'}
+              </Heading>
+              <p className={styles.heroDescription}>
+                Welcome! I share my thoughts on software engineering, technology trends,
+                and the lessons I&apos;ve learned about leadership and team building.
+              </p>
+              <div className={styles.heroActions}>
+                <Link href="/posts" className={styles.primaryButton}>
+                  Read Articles
+                  <FiArrowRight size={18} />
+                </Link>
+                <Link href="/about" className={styles.secondaryButton}>
+                  About Me
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.featured}>
+          <div className="container">
+            <div className={styles.sectionHeader}>
+              <Heading className={styles.sectionTitle} level="h2">
+                Latest Articles
+              </Heading>
+              <p className={styles.sectionDescription}>
+                Thoughts on technology, engineering practices, and leadership lessons.
+              </p>
+            </div>
+            <Posts posts={data.posts?.nodes} id="posts-list" />
+            <div className={styles.viewAll}>
+              <Link href="/posts" className={styles.viewAllLink}>
+                View all articles
+                <FiArrowRight size={16} />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {appConfig.newsletter?.enabled && (
+          <section className={styles.newsletter}>
+            <div className="container">
+              <div className={styles.newsletterContent}>
+                <Heading className={styles.newsletterTitle} level="h3">
+                  {appConfig.newsletter?.title || 'Stay Updated'}
+                </Heading>
+                <p className={styles.newsletterDescription}>
+                  {appConfig.newsletter?.description || 'Get weekly insights on tech and leadership delivered to your inbox.'}
+                </p>
+                <form className={styles.newsletterForm}>
+                  <input
+                    type="email"
+                    placeholder={appConfig.newsletter?.placeholder || 'Enter your email'}
+                    className={styles.newsletterInput}
+                    required
+                  />
+                  <button type="submit" className={styles.newsletterButton}>
+                    {appConfig.newsletter?.buttonText || 'Subscribe'}
+                  </button>
+                </form>
+                <p className={styles.newsletterPrivacy}>
+                  No spam. Unsubscribe anytime.
+                </p>
+              </div>
             </div>
           </section>
-          <section className="cta">
-            <CTA
-              Button={() => (
-                <Button href="/posts">
-                  Get Started <FaArrowRight style={{ marginLeft: `1rem` }} />
-                </Button>
-              )}
-            >
-              <span>
-                Learn about Core Web Vitals and how Headless Platform can help
-                you reach your most demanding speed and user experience
-                requirements.
-              </span>
-            </CTA>
-          </section>
-          <section className={styles.posts}>
-            <Heading className={styles.heading} level="h2">
-              Latest Posts
-            </Heading>
-            <Posts posts={data.posts?.nodes} id="posts-list" />
-          </section>
-          <section className="cta">
-            <CTA
-              Button={() => (
-                <Button href="/posts">
-                  Get Started <FaArrowRight style={{ marginLeft: `1rem` }} />
-                </Button>
-              )}
-            >
-              <span>
-                Learn about Core Web Vitals and how Headless Platform can help
-                you reach your most demanding speed and user experience
-                requirements.
-              </span>
-            </CTA>
-          </section>
-          <section className={styles.testimonials}>
-            <Heading className={styles.heading} level="h2">
-              Testimonials
-            </Heading>
-            <p className={styles.description}>
-              Here are just a few of the nice things our customers have to say.
-            </p>
-            <Testimonials testimonials={data?.testimonials?.nodes} />
-          </section>
-        </div>
+        )}
+
+        <section className={styles.topics}>
+          <div className="container">
+            <div className={styles.sectionHeader}>
+              <Heading className={styles.sectionTitle} level="h2">
+                Topics I Write About
+              </Heading>
+            </div>
+            <div className={styles.topicsGrid}>
+              {(appConfig.categories || ['Technology', 'Leadership', 'Engineering', 'Career']).map((topic) => (
+                <Link
+                  key={topic}
+                  href={`/category/${topic.toLowerCase()}`}
+                  className={styles.topicCard}
+                >
+                  <span className={styles.topicName}>{topic}</span>
+                  <FiArrowRight size={16} />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
       </Main>
+
       <Footer menuItems={footerMenu} />
     </>
   );
@@ -132,7 +159,6 @@ Component.query = gql`
   ${BlogInfoFragment}
   ${NavigationMenu.fragments.entry}
   ${Posts.fragments.entry}
-  ${Testimonials.fragments.entry}
   query GetPageData(
     $headerLocation: MenuLocationEnum
     $footerLocation: MenuLocationEnum
@@ -141,11 +167,6 @@ Component.query = gql`
     posts(first: $first) {
       nodes {
         ...PostsItemFragment
-      }
-    }
-    testimonials {
-      nodes {
-        ...TestimonialsFragment
       }
     }
     generalSettings {
