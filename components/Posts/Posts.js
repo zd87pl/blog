@@ -2,11 +2,12 @@ import React from 'react';
 import { gql } from '@apollo/client';
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import { FeaturedImage, FormatDate } from 'components';
 import appConfig from 'app.config';
+import { FeaturedImage, FormatDate } from 'components';
 import useFocusFirstNewResult from 'hooks/useFocusFirstNewResult';
 
 import styles from './Posts.module.scss';
+
 let cx = classNames.bind(styles);
 
 /**
@@ -46,14 +47,16 @@ function Posts({ posts, intro, id, compact = false }) {
               id={`post-${post.id}`}
             >
               {hasImage && (
-                <Link href={post?.uri ?? '#'} className={cx('image-link')} tabIndex={-1}>
-                  <FeaturedImage
-                    className={cx('image')}
-                    image={image}
-                    width={400}
-                    height={225}
-                    priority={i < appConfig.postsAboveTheFold}
-                  />
+                <Link legacyBehavior href={post?.uri ?? '#'}>
+                  <a className={cx('image-link')} tabIndex={-1}>
+                    <FeaturedImage
+                      className={cx('image')}
+                      image={image}
+                      width={400}
+                      height={225}
+                      priority={i < appConfig.postsAboveTheFold}
+                    />
+                  </a>
                 </Link>
               )}
 
@@ -69,11 +72,10 @@ function Posts({ posts, intro, id, compact = false }) {
                 </div>
 
                 <h3 className={cx('title')}>
-                  <Link
-                    href={post?.uri ?? '#'}
-                    ref={isFirstNewResult ? firstNewResultRef : null}
-                  >
-                    {post.title}
+                  <Link legacyBehavior href={post?.uri ?? '#'}>
+                    <a ref={isFirstNewResult ? firstNewResultRef : null}>
+                      {post.title}
+                    </a>
                   </Link>
                 </h3>
 

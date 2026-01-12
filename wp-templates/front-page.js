@@ -1,10 +1,10 @@
 import * as MENUS from 'constants/menus';
-
 import { useQuery, gql } from '@apollo/client';
 import { FiArrowRight, FiMail } from 'react-icons/fi';
 import Link from 'next/link';
-import styles from 'styles/pages/_Home.module.scss';
 import appConfig from 'app.config';
+import styles from 'styles/pages/_Home.module.scss';
+
 import {
   Main,
   Heading,
@@ -66,9 +66,11 @@ export default function Component() {
                 a thought, I&apos;d love to hear from you.
               </p>
               <div className={styles.welcomeActions}>
-                <Link href="/about" className={styles.textLink}>
-                  More about me
-                  <FiArrowRight size={16} />
+                <Link legacyBehavior href="/about">
+                  <a className={styles.textLink}>
+                    More about me
+                    <FiArrowRight size={16} />
+                  </a>
                 </Link>
                 <a
                   href={`mailto:${appConfig.socialLinks?.emailAddress || 'hello@example.com'}`}
@@ -129,9 +131,11 @@ export default function Component() {
               <Heading className={styles.recentTitle} level="h2">
                 Recent writing
               </Heading>
-              <Link href="/posts" className={styles.viewAllLink}>
-                View all
-                <FiArrowRight size={16} />
+              <Link legacyBehavior href="/posts">
+                <a className={styles.viewAllLink}>
+                  View all
+                  <FiArrowRight size={16} />
+                </a>
               </Link>
             </div>
             <Posts posts={data.posts?.nodes} id="posts-list" />
