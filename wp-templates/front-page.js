@@ -12,11 +12,12 @@ import {
   SEO,
   Header,
   Footer,
-  Posts,
+  FeaturedImage,
+  FormatDate,
 } from 'components';
 import { BlogInfoFragment } from 'fragments/GeneralSettings';
 
-const postsPerPage = 3;
+const postsPerPage = 5;
 
 const projects = [
   {
@@ -58,6 +59,9 @@ export default function Component() {
     data?.generalSettings ?? {};
   const primaryMenu = data?.headerMenuItems?.nodes ?? [];
   const footerMenu = data?.footerMenuItems?.nodes ?? [];
+  const posts = data?.posts?.nodes ?? [];
+  const featuredPost = posts[0];
+  const morePosts = posts.slice(1);
 
   const pageTitle = appConfig.siteName || siteTitle;
   const pageDescription = appConfig.siteTagline || siteDescription;
@@ -73,83 +77,137 @@ export default function Component() {
       <Header menuItems={primaryMenu} />
 
       <Main className={styles.home}>
-        {/* Welcome Section */}
-        <section className={styles.welcome}>
+        {/* Hero Section: Featured Post + About Sidebar */}
+        <section className={styles.hero}>
           <div className="container">
-            <div className={styles.welcomeContent}>
-              <p className={styles.greeting}>Hey, I&apos;m</p>
-              <Heading className={styles.name} level="h1">
-                {appConfig.author?.name || 'Your Name'}
-              </Heading>
-              <p className={styles.intro}>
-                I&apos;m a software engineer who&apos;s spent the past decade building products
-                and, more recently, learning what it takes to build teams. This is my corner
-                of the internet where I think out loud about the craft of engineering,
-                the challenges of leadership, and everything in between.
-              </p>
-              <p className={styles.intro}>
-                I don&apos;t have all the answers—far from it—but I find that writing helps
-                me make sense of what I&apos;m learning. If any of it resonates or sparks
-                a thought, I&apos;d love to hear from you.
-              </p>
-              <div className={styles.welcomeActions}>
-                <Link legacyBehavior href="/about">
-                  <a className={styles.textLink}>
-                    More about me
-                    <FiArrowRight size={16} />
-                  </a>
-                </Link>
-                <a
-                  href={`mailto:${appConfig.socialLinks?.emailAddress || 'hello@example.com'}`}
-                  className={styles.textLink}
-                >
-                  Say hello
-                  <FiMail size={16} />
-                </a>
+            <div className={styles.heroGrid}>
+              {/* Main: Featured Post */}
+              <div className={styles.featuredPost}>
+                {featuredPost ? (
+                  <>
+                    <span className={styles.featuredLabel}>Latest</span>
+                    {featuredPost.featuredImage?.node && (
+                      <Link legacyBehavior href={featuredPost.uri ?? '#'}>
+                        <a className={styles.featuredImageLink}>
+                          <FeaturedImage
+                            className={styles.featuredImage}
+                            image={featuredPost.featuredImage.node}
+                            width={800}
+                            height={450}
+                            priority={true}
+                          />
+                        </a>
+                      </Link>
+                    )}
+                    <div className={styles.featuredContent}>
+                      <div className={styles.featuredMeta}>
+                        <FormatDate date={featuredPost.date} />
+                      </div>
+                      <Heading className={styles.featuredTitle} level="h1">
+                        <Link legacyBehavior href={featuredPost.uri ?? '#'}>
+                          <a>{featuredPost.title}</a>
+                        </Link>
+                      </Heading>
+                      {featuredPost.excerpt && (
+                        <div
+                          className={styles.featuredExcerpt}
+                          dangerouslySetInnerHTML={{ __html: featuredPost.excerpt }}
+                        />
+                      )}
+                      <Link legacyBehavior href={featuredPost.uri ?? '#'}>
+                        <a className={styles.readMoreLink}>
+                          Read article
+                          <FiArrowRight size={16} />
+                        </a>
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <p className={styles.noPosts}>No posts yet.</p>
+                )}
               </div>
+
+              {/* Sidebar: About Me */}
+              <aside className={styles.sidebar}>
+                <div className={styles.aboutCard}>
+                  <p className={styles.aboutGreeting}>Hey, I&apos;m</p>
+                  <Heading className={styles.aboutName} level="h2">
+                    {appConfig.author?.name || 'Your Name'}
+                  </Heading>
+                  <p className={styles.aboutText}>
+                    Software engineer turned engineering leader. I write about
+                    building products, leading teams, and the lessons learned along the way.
+                  </p>
+                  <div className={styles.aboutLinks}>
+                    <Link legacyBehavior href="/about">
+                      <a className={styles.aboutLink}>
+                        More about me
+                        <FiArrowRight size={14} />
+                      </a>
+                    </Link>
+                    <a
+                      href={`mailto:${appConfig.socialLinks?.emailAddress || 'hello@example.com'}`}
+                      className={styles.aboutLink}
+                    >
+                      Say hello
+                      <FiMail size={14} />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Topics */}
+                <div className={styles.topicsCard}>
+                  <span className={styles.topicsLabel}>Topics</span>
+                  <div className={styles.topicsList}>
+                    <span className={styles.topicTag}>Engineering</span>
+                    <span className={styles.topicTag}>Leadership</span>
+                    <span className={styles.topicTag}>Career</span>
+                    <span className={styles.topicTag}>Tools</span>
+                  </div>
+                </div>
+              </aside>
             </div>
           </div>
         </section>
 
-        {/* What I Write About */}
-        <section className={styles.topics}>
-          <div className="container">
-            <div className={styles.topicsHeader}>
-              <Heading className={styles.topicsTitle} level="h2">
-                What I write about
-              </Heading>
-              <p className={styles.topicsDescription}>
-                Mostly things I&apos;m figuring out as I go.
-              </p>
+        {/* More Posts */}
+        {morePosts.length > 0 && (
+          <section className={styles.morePosts}>
+            <div className="container">
+              <div className={styles.morePostsHeader}>
+                <Heading className={styles.morePostsTitle} level="h2">
+                  More writing
+                </Heading>
+                <Link legacyBehavior href="/posts">
+                  <a className={styles.viewAllLink}>
+                    View all
+                    <FiArrowRight size={16} />
+                  </a>
+                </Link>
+              </div>
+              <div className={styles.morePostsGrid}>
+                {morePosts.map((post) => (
+                  <article key={post.id} className={styles.postCard}>
+                    <div className={styles.postMeta}>
+                      <FormatDate date={post.date} />
+                    </div>
+                    <h3 className={styles.postTitle}>
+                      <Link legacyBehavior href={post.uri ?? '#'}>
+                        <a>{post.title}</a>
+                      </Link>
+                    </h3>
+                    {post.excerpt && (
+                      <div
+                        className={styles.postExcerpt}
+                        dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                      />
+                    )}
+                  </article>
+                ))}
+              </div>
             </div>
-            <div className={styles.topicsGrid}>
-              <div className={styles.topicItem}>
-                <span className={styles.topicLabel}>Engineering</span>
-                <p className={styles.topicText}>
-                  Architecture decisions, code quality, and the joy of solving hard problems.
-                </p>
-              </div>
-              <div className={styles.topicItem}>
-                <span className={styles.topicLabel}>Leadership</span>
-                <p className={styles.topicText}>
-                  Building teams, giving feedback, and navigating the transition from IC to manager.
-                </p>
-              </div>
-              <div className={styles.topicItem}>
-                <span className={styles.topicLabel}>Career</span>
-                <p className={styles.topicText}>
-                  Growth, decisions, and the occasional reflection on where this all leads.
-                </p>
-              </div>
-              <div className={styles.topicItem}>
-                <span className={styles.topicLabel}>Tools & Process</span>
-                <p className={styles.topicText}>
-                  What&apos;s working for me—dev tools, workflows, and ways of thinking.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Open Source Projects */}
         <section className={styles.projects}>
@@ -192,24 +250,6 @@ export default function Component() {
           </div>
         </section>
 
-        {/* Recent Writing */}
-        <section className={styles.recent}>
-          <div className="container">
-            <div className={styles.recentHeader}>
-              <Heading className={styles.recentTitle} level="h2">
-                Recent writing
-              </Heading>
-              <Link legacyBehavior href="/posts">
-                <a className={styles.viewAllLink}>
-                  View all
-                  <FiArrowRight size={16} />
-                </a>
-              </Link>
-            </div>
-            <Posts posts={data.posts?.nodes} id="posts-list" />
-          </div>
-        </section>
-
         {/* Newsletter */}
         {appConfig.newsletter?.enabled && (
           <section className={styles.newsletter}>
@@ -226,7 +266,6 @@ export default function Component() {
                   className={styles.newsletterForm}
                   onSubmit={(e) => {
                     e.preventDefault();
-                    // TODO: Implement newsletter subscription with your preferred service
                     console.log('Newsletter subscription submitted');
                   }}
                 >
@@ -262,7 +301,7 @@ Component.variables = () => {
 Component.query = gql`
   ${BlogInfoFragment}
   ${NavigationMenu.fragments.entry}
-  ${Posts.fragments.entry}
+  ${FeaturedImage.fragments.entry}
   query GetPageData(
     $headerLocation: MenuLocationEnum
     $footerLocation: MenuLocationEnum
@@ -270,7 +309,12 @@ Component.query = gql`
   ) {
     posts(first: $first) {
       nodes {
-        ...PostsItemFragment
+        id
+        date
+        uri
+        title
+        excerpt
+        ...FeaturedImageFragment
       }
     }
     generalSettings {
